@@ -41,6 +41,24 @@ function displayItem() {
     });
 };
 
+function askUser() {
+    inquirer
+    .prompt ([
+        {
+            name: "productID",
+            type: "input",
+            message:"What is the product id of the item you want to buy ?"
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many units do you want ?"
+        }
+    ]).then(function(answer){
+        connection.query()
+    });
+}
+
 
 
 
