@@ -16,7 +16,7 @@ var connection = mysql.createConnection ({
     host:"localhost",
     port: "3306",
     user: "root",
-    password: "**********", // remember password !!
+    password: "Kipsang1990", // remember password !!
     database: "bamazon"
 }); 
 
@@ -25,7 +25,6 @@ connection.connect(function(err){
 
     console.log("Connected");
     displayItem();
-    connection.end();
 });
 
 function displayItem() {
@@ -35,10 +34,13 @@ function displayItem() {
         
         console.log("------------Available Products------------------------")
         res.forEach(function(item){
-            console.log("   Id: "+item.item_id+ " || "+"    Name: "+item.product_name+" || "+"  Price: "+"$"+item.price);
+            console.log("   Id: "+item.item_id+ " || Name: "+item.product_name+" || Price: "+"$"+item.price);
         })
         console.log("------------------------------------------------------")
+        setTimeout(askUser, 1000);
     });
+
+
 };
 
 function askUser() {
@@ -52,12 +54,35 @@ function askUser() {
         {
             name: "quantity",
             type: "input",
-            message: "How many units do you want ?"
+            message: "How many units of this item would you like to get ?"
         }
     ]).then(function(answer){
-        connection.query()
+        var itemSelect ="SELECT * FROM products WHERE ?";
+        connection.query(itemSelect,{item_id:answer.productID}, function(err,data){
+
+            data.forEach(function(item){
+                if(item.stock_quantity > answer.quantity ) {
+                    console.log("Item Id: "+item.item_id +" || Product Name: "+item.product_name +" || Total Price: $"+answer.quantity*item.price);
+
+                } else {
+                    console.log("Sorry, we have insufficient quantity !!. We will be placing an order for more "+item.product_name+"s");
+                }
+            });
+
+            // updating table 
+
+            function tableUpdate() {
+                var alterTable = "ALTER TABLE products MODIFY COLUMN "
+            };
+
+
+        });
     });
+
+    //connection.end();
+
 }
+
 
 
 
