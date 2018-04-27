@@ -16,7 +16,7 @@ var connection = mysql.createConnection ({
     host:"localhost",
     port: "3306",
     user: "root",
-    password: "Kipsang1990", // remember password !!
+    password: "********", // remember password !!
     database: "bamazon"
 }); 
 
@@ -39,8 +39,6 @@ function displayItem() {
         console.log("------------------------------------------------------")
         setTimeout(askUser, 1000);
     });
-
-
 };
 
 function askUser() {
@@ -62,8 +60,11 @@ function askUser() {
 
             data.forEach(function(item){
                 if(item.stock_quantity > answer.quantity ) {
+                    
+                    console.log("Order processed");
                     console.log("Item Id: "+item.item_id +" || Product Name: "+item.product_name +" || Total Price: $"+answer.quantity*item.price);
 
+                    tableUpdate(item.item_id, (item.stock_quantity - answer.quantity)  ) // update this 
                 } else {
                     console.log("Sorry, we have insufficient quantity !!. We will be placing an order for more "+item.product_name+"s");
                 }
@@ -71,11 +72,16 @@ function askUser() {
 
             // updating table 
 
-            function tableUpdate() {
-                var alterTable = "ALTER TABLE products MODIFY COLUMN "
+            function tableUpdate(item, number) {
+                var alterTable = "UPDATE products set stock_quantity = ? WHERE item_id = ?";
+                connection.query(alterTable, [number, item], function(err, data){
+
+                    if (err) {
+                        console.log(err+" Table not updated")
+                    }
+
+                });
             };
-
-
         });
     });
 
