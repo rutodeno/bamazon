@@ -125,25 +125,45 @@ function addInventory() {
         {
             name: "addItem",
             type: "input",
-            message: "What item would you like to add of ?"
+            message: "What item would you like to add ?"
         },
         {
             name: "quantity",
             type: "input",
             message: "How much of the item would you like to add ?"
         },
-        {
-            name: "confirmation",
-            type: "confirm",
-            message: "Would you like to add another item ? (y/N)"
-        }
+        // {
+        //     name: "confirmation",
+        //     type: "confirm",
+        //     message: "Would you like to add another item ? (y/N)"
+        // }
 
     ]).then(function(answer){
+        var listAllItems = "SELECT product_name FROM products";
+        connection.query(listAllItems, function(err, res){
+            res.forEach(function(itemName){
+
+                if (answer.addItem === itemName ){
+
+                    var addItem = "UPDATE products set stock_quantity = ? WHERE product_name = ?";
+                    connection.query(addItem,[answer.stock_quantity,itemName], function(err,newRes){
+                        console.log("updated !!");
+                    })
+
+                } else {
+                    console.log("check you input, and try again");
+                }
+
+            })
+
+        });
+        
+
+
+
+
 
     });
-
-    //var addItem = 
-
 };
 
 function addNewProduct() {
