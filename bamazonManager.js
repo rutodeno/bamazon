@@ -118,9 +118,40 @@ function lowInventory() {
 
 };
 
+function addInventory() {
+
+    inquirer
+    .prompt([
+        {
+            name: "addItem",
+            type: "input",
+            message: "What item would you like to add of ?"
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How much of the item would you like to add ?"
+        },
+        {
+            name: "confirmation",
+            type: "confirm",
+            message: "Would you like to add another item ? (y/N)"
+        }
+
+    ]).then(function(answer){
+
+    });
+
+    //var addItem = 
+
+};
+
+function addNewProduct() {
+
+}
 function exitMenu() {
 
     connection.end();
-}
+};
 
 
