@@ -33,12 +33,12 @@ function menuOptions() { // listing available options
                 name: "bossChoice",
                 type: "list",
                 message: "Dear supervisor, what would you like to do ?",
-                choices: array = [  "a. view products for sale",
-                                    "b. view low inventory",
-                                    "c. add to inventory",
-                                    "d. add a new product",
-                                    "e. Exit"                   
-                                ]
+                choices: array = ["a. view products for sale",
+                    "b. view low inventory",
+                    "c. add to inventory",
+                    "d. add a new product",
+                    "e. Exit"
+                ]
             }
         ]).then(function (answer) {
 
@@ -96,12 +96,12 @@ function displayItems() {
 function lowInventory() {
 
     var lowItems = "SELECT item_id, product_name, stock_quantity FROM products WHERE stock_quantity < 5 "
-    connection.query(lowItems, function(err,res){
-        if (err) throw err ;
+    connection.query(lowItems, function (err, res) {
+        if (err) throw err;
 
-        var list  = new Table;
+        var list = new Table;
 
-        res.forEach(function (low){
+        res.forEach(function (low) {
             list.cell("item_id", low.item_id);
             list.cell("Product Name", low.product_name);
             list.cell("Quantity", low.stock_quantity);
@@ -121,49 +121,52 @@ function lowInventory() {
 function addInventory() {
 
     inquirer
-    .prompt([
-        {
-            name: "addItem",
-            type: "input",
-            message: "What item would you like to add ?"
-        },
-        {
-            name: "quantity",
-            type: "input",
-            message: "How much of the item would you like to add ?"
-        },
-        // {
-        //     name: "confirmation",
-        //     type: "confirm",
-        //     message: "Would you like to add another item ? (y/N)"
-        // }
+        .prompt([
+            {
+                name: "addItem",
+                type: "input",
+                message: "What item would you like to add ?"
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "How much of the item would you like to add ?"
+            },
+            // {
+            //     name: "confirmation",
+            //     type: "confirm",
+            //     message: "Would you like to add another item ? (y/N)"
+            // }
 
-    ]).then(function(answer){
-        var listAllItems = "SELECT product_name FROM products";
-        connection.query(listAllItems, function(err, res){
-            res.forEach(function(itemName){
+        ]).then(function (answer) {
+            var listAllItems = "SELECT product_name FROM products";
+            connection.query(listAllItems, function (err, res) {
 
-                if (answer.addItem === itemName ){
 
-                    var addItem = "UPDATE products set stock_quantity = ? WHERE product_name = ?";
-                    connection.query(addItem,[answer.stock_quantity,itemName], function(err,newRes){
-                        console.log("updated !!");
-                    })
+                var checker = false;
+                for (var i = 0; i < res.length; i++) {
+                    if ((answer.addItem).toLowerCase() != (res[i].product_name).toLowerCase()) {
 
-                } else {
-                    console.log("check you input, and try again");
+                        checker = false;
+                    } else {
+                        checker = true;
+
+                        var addQuery = "UPDATE products set stock_quantity = ? WHERE product_name = ?";
+                        connection.query(addQuery,[answer.stock_quantity,answer.addItem], function(err,newRes){
+                        })
+                    }
                 }
 
-            })
+                if (checker) {
+                    console.log("Added item to stock");
+                } else {
+                    console.log("check you input, and try again")
+                }
+
+
+            });
 
         });
-        
-
-
-
-
-
-    });
 };
 
 function addNewProduct() {
