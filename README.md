@@ -1,6 +1,6 @@
 # Bamazon
 
-An Amozaon-like store that takes orders from customers and depletes stock from the store's inventory. The app also has assists managers to track orders and repelish stock.
+An Amazon-like store that takes orders from customers and depletes stock from the store's inventory. The app also has assists managers to track orders and repelish stock.
 
 ## Objective
 
