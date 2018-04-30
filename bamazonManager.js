@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     host: "localhost",
     port: "3306",
     user: "root",
-    password: "***********",
+    password: "Kipsang1990",
     database: "bamazon"
 });
 
@@ -78,7 +78,7 @@ function displayItems() {
             display.cell("Item Id", item.item_id);
             display.cell("Product Name", item.product_name);
             display.cell("Department", item.department_name);
-            display.cell("Price", item.price);
+            display.cell("Price ($)", item.price);
             display.cell("Quantity", item.stock_quantity);
             display.newRow();
 
@@ -99,19 +99,27 @@ function lowInventory() {
     connection.query(lowItems, function (err, res) {
         if (err) throw err;
 
-        var list = new Table;
+            var list = new Table;
 
-        res.forEach(function (low) {
-            list.cell("item_id", low.item_id);
-            list.cell("Product Name", low.product_name);
-            list.cell("Quantity", low.stock_quantity);
-            list.newRow();
-        });
+            res.forEach(function (low) {
+                list.cell("item_id", low.item_id);
+                list.cell("Product Name", low.product_name);
+                list.cell("Quantity", low.stock_quantity);
+                list.newRow();
+            });
 
-        console.log("");
-        console.log(list.toString());
-        console.log("");
+            //console.log(res[0].item_id);
+            if ( res.length === 0 ) {          
+                console.log("");
+                console.log("All products have sufficient supply. Check again later")
+                console.log("");
 
+            } else {
+
+                console.log("");
+                console.log(list.toString());
+                console.log("");
+            }
         menuOptions();
 
     })
@@ -119,56 +127,67 @@ function lowInventory() {
 };
 
 function addInventory() {
+    connection.query("SELECT * FROM products", function (err, res) {
+        var arrayItems = [];
+        res.forEach(function (data) {
+            arrayItems.push(data.product_name);
+        });
+        inquirer
+            .prompt([
+                {
+                    name: "addItem",
+                    type: "list",
+                    message: "Please select from the list  ?",
+                    choices: arrayItems
+                },
+                {
+                    name: "quantity",
+                    type: "input",
+                    message: "How much of the item would you like to add ?",
+                    validate: function (input) {
+                        var done = this.async();
 
-    inquirer
-        .prompt([
-            {
-                name: "addItem",
-                type: "input",
-                message: "What item would you like to add ?"
-            },
-            {
-                name: "quantity",
-                type: "input",
-                message: "How much of the item would you like to add ?"
-            },
-            // {
-            //     name: "confirmation",
-            //     type: "confirm",
-            //     message: "Would you like to add another item ? (y/N)"
-            // }
-
-        ]).then(function (answer) {
-            var listAllItems = "SELECT product_name FROM products";
-            connection.query(listAllItems, function (err, res) {
+                        setTimeout(function () {
+                            if (typeof parseInt(input) != "number") {
+                                done("Please provide a number")
+                                return;
+                            }
+                            done(null, true);
+                        }, 1000);
+                    }
+                },
 
 
+            ]).then(function (answer) {
+
+                var itemNumber = arrayItems.indexOf(answer.addItem) +1 ; // getting our item number from our array.
                 var checker = false;
                 for (var i = 0; i < res.length; i++) {
-                    if ((answer.addItem).toLowerCase() != (res[i].product_name).toLowerCase()) {
 
-                        checker = false;
-                    } else {
+                    if (answer.addItem === res[i].product_name) {
                         checker = true;
 
-                        var addQuery = "UPDATE products set stock_quantity = ? WHERE product_name = ?";
-                        connection.query(addQuery,[answer.stock_quantity,answer.addItem], function(err,newRes){
-                        })
+                    } else {
+                        checker = false;
                     }
                 }
 
-                if (checker) {
+                if (!checker) {
+                    var newQuery = "INSERT INTO products (stock_quantity) ";
+                    var addQuery = "UPDATE products set stock_quantity = ? WHERE product_name = ? and item_id = ?";
+                    
+                    connection.query(addQuery, [parseInt(answer.quantity), answer.addItem, parseInt(itemNumber)], function (err, newRes) {
+                    })
                     console.log("Added item to stock");
                 } else {
                     console.log("check you input, and try again")
                 }
 
+                menuOptions();
 
             });
-
-        });
-};
-
+    });
+}
 function addNewProduct() {
 
 }
