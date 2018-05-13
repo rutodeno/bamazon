@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     host: "localhost",
     port: "3306",
     user: "root",
-    password: "Kipsang1990",
+    password: "",
     database: "bamazon"
 });
 
@@ -196,7 +196,7 @@ function addNewProduct() {
 
     setTimeout(menuOptions, 2000);
 
-}
+}   
 function exitMenu() {
 
     connection.end();
