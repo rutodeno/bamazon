@@ -16,7 +16,7 @@ var connection = mysql.createConnection ({
     host:"localhost",
     port: "3306",
     user: "root",
-    password: "********", // remember password !!
+    password: "Kipsang1990", // remember password !!
     database: "bamazon"
 }); 
 
@@ -65,8 +65,16 @@ function askUser() {
                     console.log("Item Id: "+item.item_id +" || Product Name: "+item.product_name +" || Total Price: $"+answer.quantity*item.price);
 
                     tableUpdate(item.item_id, (item.stock_quantity - answer.quantity)  ) // update this 
+
+                    connection.end();
+
+
                 } else {
                     console.log("Sorry, we have insufficient quantity !!. We will be placing an order for more "+item.product_name+"s");
+                    
+                    //console.log("Please select another item ...")
+
+                    connection.end();
                 }
             });
 

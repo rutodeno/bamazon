@@ -190,6 +190,12 @@ function addInventory() {
 }
 function addNewProduct() {
 
+    console.log("Sorry, this section is currently being updated. Please check again later");
+    console.log("");
+    console.log("")
+
+    setTimeout(menuOptions, 2000);
+
 }
 function exitMenu() {
 
