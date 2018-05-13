@@ -12,4 +12,6 @@ Bamazon allows users to place orders of the items they need. The items are mainl
 The app allows managers to track the inventory of the products on the database. They should be able to check low inventory, add new products, add more of any item in the store. All the changes are updated on the database.
 
 ## Application
-The app is useful in applying MySQL and Node skills. Users can learn MySQL and inquirer npm packages. To see how the app works, see the video below.   
+The app is useful in applying MySQL and Node skills. Users can learn MySQL and inquirer npm packages. To see how the app works, click on the link below.
+
+https://drive.google.com/file/d/1ghNRkk8Ofhg-VwKpV-LB3LRlw7JnKofy/view?usp=sharing
